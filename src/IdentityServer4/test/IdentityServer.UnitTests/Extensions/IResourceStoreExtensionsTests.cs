@@ -15,7 +15,7 @@ namespace IdentityServer.UnitTests.Extensions
     public class IResourceStoreExtensionsTests
     {
         [Fact]
-        public void GetAllEnabledResourcesAsync_on_duplicate_identity_scopes_should_fail()
+        public async Task GetAllEnabledResourcesAsync_on_duplicate_identity_scopes_should_fail()
         {
             var store = new MockResourceStore()
             {
@@ -25,7 +25,9 @@ namespace IdentityServer.UnitTests.Extensions
             };
 
             Func<Task> a = () => store.GetAllEnabledResourcesAsync();
-            a.Should().Throw<Exception>().And.Message.ToLowerInvariant().Should().Contain("duplicate").And.Contain("identity scopes");
+            await a.Should().ThrowAsync<Exception>().Where(exception =>
+                exception.Message.ToLowerInvariant().Contains("duplicate")
+                && exception.Message.ToLowerInvariant().Contains("identity scopes"));
         }
 
         [Fact]
@@ -42,7 +44,7 @@ namespace IdentityServer.UnitTests.Extensions
         }
 
         [Fact]
-        public void GetAllEnabledResourcesAsync_on_duplicate_api_resources_should_fail()
+        public async Task GetAllEnabledResourcesAsync_on_duplicate_api_resources_should_fail()
         {
             var store = new MockResourceStore()
             {
@@ -50,7 +52,9 @@ namespace IdentityServer.UnitTests.Extensions
             };
 
             Func<Task> a = () => store.GetAllEnabledResourcesAsync();
-            a.Should().Throw<Exception>().And.Message.ToLowerInvariant().Should().Contain("duplicate").And.Contain("api resources");
+            await a.Should().ThrowAsync<Exception>().Where(exception =>
+                exception.Message.ToLowerInvariant().Contains("duplicate")
+                && exception.Message.ToLowerInvariant().Contains("api resources"));
         }
 
         [Fact]
@@ -65,7 +69,7 @@ namespace IdentityServer.UnitTests.Extensions
         }
 
         [Fact]
-        public void FindResourcesByScopeAsync_on_duplicate_identity_scopes_should_fail()
+        public async Task FindResourcesByScopeAsync_on_duplicate_identity_scopes_should_fail()
         {
             var store = new MockResourceStore()
             {
@@ -75,7 +79,9 @@ namespace IdentityServer.UnitTests.Extensions
             };
 
             Func<Task> a = () => store.FindResourcesByScopeAsync(new string[] { "A" });
-            a.Should().Throw<Exception>().And.Message.ToLowerInvariant().Should().Contain("duplicate").And.Contain("identity scopes");
+            await a.Should().ThrowAsync<Exception>().Where(exception =>
+                exception.Message.ToLowerInvariant().Contains("duplicate")
+                && exception.Message.ToLowerInvariant().Contains("identity scopes"));
         }
 
         [Fact]

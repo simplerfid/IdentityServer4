@@ -67,7 +67,6 @@ namespace IdentityServer.IntegrationTests.Clients
             {
                 Address = TokenEndpoint,
 
-                ClientId = ClientId,
                 ClientAssertion =
                 {
                     Type = OidcConstants.ClientAssertionTypes.JwtBearer,
@@ -88,7 +87,6 @@ namespace IdentityServer.IntegrationTests.Clients
             var response = await _client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
                 Address = TokenEndpoint,
-                ClientId = "client",
 
                 ClientAssertion =
                 {
@@ -111,7 +109,6 @@ namespace IdentityServer.IntegrationTests.Clients
             {
                 Address = TokenEndpoint,
 
-                ClientId = ClientId,
                 ClientAssertion =
                 {
                     Type = OidcConstants.ClientAssertionTypes.JwtBearer,
@@ -128,7 +125,6 @@ namespace IdentityServer.IntegrationTests.Clients
             {
                 Address = TokenEndpoint,
 
-                ClientId = ClientId,
                 ClientAssertion =
                 {
                     Type = OidcConstants.ClientAssertionTypes.JwtBearer,
@@ -150,11 +146,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Address = TokenEndpoint,
 
                 ClientId = ClientId,
-                ClientAssertion =
-                {
-                    Type = OidcConstants.ClientAssertionTypes.JwtBearer,
-                    Value = "invalid"
-                },
+                ClientSecret = "invalid",
 
                 Scope = "api1"
             });
@@ -175,11 +167,7 @@ namespace IdentityServer.IntegrationTests.Clients
                 Address = TokenEndpoint,
 
                 ClientId = clientId,
-                ClientAssertion =
-                {
-                    Type = OidcConstants.ClientAssertionTypes.JwtBearer,
-                    Value = token
-                },
+                ClientSecret = token,
 
                 Scope = "api1"
             });

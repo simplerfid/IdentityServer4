@@ -74,7 +74,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 ClientId = "properties_test_client",
                 ClientName = "Properties Test Client",
                 AllowedCorsOrigins = {"https://localhost"},
-                AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
+                AllowedGrantTypes = IdentityServer4.Models.GrantTypes.HybridAndClientCredentials,
                 AllowedScopes = {"openid", "profile", "api1"},
                 Claims = {new ClientClaim("test", "value")},
                 ClientSecrets = {new Secret("secret".Sha256())},

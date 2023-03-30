@@ -62,7 +62,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
                     Name = "api",
                     Scopes = { "read", "write", "forbidden" }
                 }
-             };
+            };
         }
 
         private static IEnumerable<ApiScope> GetScopes()
@@ -87,7 +87,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
                     DisplayName = "Forbidden scope",
                     Emphasize = true
                 }
-             };
+            };
         }
 
         public AuthorizeInteractionResponseGeneratorTests_Consent()
@@ -107,14 +107,14 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
 
         [Fact]
-        public void ProcessConsentAsync_NullRequest_Throws()
+        public async Task ProcessConsentAsync_NullRequest_Throws()
         {
             Func<Task> act = () => _subject.ProcessConsentAsync(null, new ConsentResponse());
 
-            act.Should().Throw<ArgumentNullException>()
-                .And.ParamName.Should().Be("request");
+            await act.Should().ThrowAsync<ArgumentNullException>()
+                .Where(exception => exception.ParamName.Equals("request"));
         }
-        
+
         [Fact]
         public async Task ProcessConsentAsync_AllowsNullConsent()
         {
@@ -131,7 +131,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
         }
 
         [Fact]
-        public void ProcessConsentAsync_PromptModeIsLogin_Throws()
+        public async Task ProcessConsentAsync_PromptModeIsLogin_Throws()
         {
             RequiresConsent(true);
             var request = new ValidatedAuthorizeRequest()
@@ -146,12 +146,12 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             Func<Task> act = () => _subject.ProcessConsentAsync(request);
 
-            act.Should().Throw<ArgumentException>()
-                .And.Message.Should().Contain("PromptMode");
+            await act.Should().ThrowAsync<ArgumentException>()
+                .Where(exception => exception.Message.Contains("PromptMode"));
         }
 
         [Fact]
-        public void ProcessConsentAsync_PromptModeIsSelectAccount_Throws()
+        public async Task ProcessConsentAsync_PromptModeIsSelectAccount_Throws()
         {
             RequiresConsent(true);
             var request = new ValidatedAuthorizeRequest()
@@ -166,8 +166,8 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             Func<Task> act = () => _subject.ProcessConsentAsync(request);
 
-            act.Should().Throw<ArgumentException>()
-                .And.Message.Should().Contain("PromptMode");
+            await act.Should().ThrowAsync<ArgumentException>()
+                .Where(exception => exception.Message.Contains("PromptMode"));
         }
 
 
@@ -191,7 +191,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
             result.Error.Should().Be(OidcConstants.AuthorizeErrors.ConsentRequired);
             AssertUpdateConsentNotCalled();
         }
-        
+
         [Fact]
         public async Task ProcessConsentAsync_PromptModeIsConsent_NoPriorConsent_ReturnsConsentResult()
         {
@@ -211,7 +211,8 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
         }
 
         [Fact]
-        public async Task ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_NoPriorConsent_ReturnsConsentResult()
+        public async Task
+            ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_NoPriorConsent_ReturnsConsentResult()
         {
             RequiresConsent(true);
             var request = new ValidatedAuthorizeRequest()
@@ -245,7 +246,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
             var consent = new ConsentResponse
             {
                 RememberConsent = false,
-                ScopesValuesConsented = new string[] {}
+                ScopesValuesConsented = new string[] { }
             };
             var result = await _subject.ProcessConsentAsync(request, consent);
             request.WasConsentShown.Should().BeTrue();
@@ -255,7 +256,8 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
         }
 
         [Fact]
-        public async Task ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_ConsentNotGranted_ReturnsErrorResult()
+        public async Task
+            ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_ConsentNotGranted_ReturnsErrorResult()
         {
             RequiresConsent(true);
             var request = new ValidatedAuthorizeRequest()
@@ -269,7 +271,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
             var consent = new ConsentResponse
             {
                 RememberConsent = false,
-                ScopesValuesConsented = new string[] {}
+                ScopesValuesConsented = new string[] { }
             };
             var result = await _subject.ProcessConsentAsync(request, consent);
             request.WasConsentShown.Should().BeTrue();
@@ -279,10 +281,11 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
         }
 
         [Fact]
-        public async Task ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_ConsentGrantedButMissingRequiredScopes_ReturnsErrorResult()
+        public async Task
+            ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_ConsentGrantedButMissingRequiredScopes_ReturnsErrorResult()
         {
             RequiresConsent(true);
-            var client = new Client {};
+            var client = new Client { };
             var request = new ValidatedAuthorizeRequest()
             {
                 ResponseMode = OidcConstants.ResponseModes.Fragment,
@@ -306,7 +309,8 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
         }
 
         [Fact]
-        public async Task ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_ConsentGranted_ScopesSelected_ReturnsConsentResult()
+        public async Task
+            ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_ConsentGranted_ScopesSelected_ReturnsConsentResult()
         {
             RequiresConsent(true);
             var request = new ValidatedAuthorizeRequest()
@@ -314,7 +318,8 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
                 ResponseMode = OidcConstants.ResponseModes.Fragment,
                 State = "12345",
                 RedirectUri = "https://client.com/callback",
-                Client = new Client {
+                Client = new Client
+                {
                     AllowRememberConsent = false
                 },
                 RequestedScopes = new List<string> { "openid", "read", "write" },
@@ -334,7 +339,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
             result.IsConsent.Should().BeFalse();
             AssertUpdateConsentNotCalled();
         }
-        
+
         [Fact]
         public async Task ProcessConsentAsync_PromptModeConsent_ConsentGranted_ScopesSelected_ReturnsConsentResult()
         {
@@ -344,7 +349,8 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
                 ResponseMode = OidcConstants.ResponseModes.Fragment,
                 State = "12345",
                 RedirectUri = "https://client.com/callback",
-                Client = new Client {
+                Client = new Client
+                {
                     AllowRememberConsent = false
                 },
                 RequestedScopes = new List<string> { "openid", "read", "write" },

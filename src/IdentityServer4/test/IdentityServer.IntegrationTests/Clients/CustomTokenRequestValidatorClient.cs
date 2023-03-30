@@ -3,7 +3,10 @@
 
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using FluentAssertions;
 using IdentityModel.Client;
@@ -117,9 +120,9 @@ namespace IdentityServer.IntegrationTests.Clients
             fields.Should().Contain("custom", "custom");
         }
 
-        private Dictionary<string, object> GetFields(TokenResponse response)
+        private Dictionary<string, string> GetFields(TokenResponse response)
         {
-            return response.Json.ToObject<Dictionary<string, object>>();
+            return response.Json.EnumerateObject().ToDictionary(_=>_.Name, _=>_.Value.ToString());
         }
     }
 }

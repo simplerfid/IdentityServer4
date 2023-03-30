@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using IdentityModel;
@@ -50,22 +51,21 @@ namespace IdentityServer.IntegrationTests.Clients
             });
 
             // raw fields
-            var fields = GetFields(response);
-            fields.Should().Contain("string_value", "some_string");
-            ((Int64)fields["int_value"]).Should().Be(42);
+            response.Json.GetProperty("string_value").GetString().Should().Be("some_string");
+            response.Json.GetProperty("int_value").GetInt64().Should().Be(42);
 
-            object temp;
-            fields.TryGetValue("identity_token", out temp).Should().BeFalse();
-            fields.TryGetValue("refresh_token", out temp).Should().BeFalse();
-            fields.TryGetValue("error", out temp).Should().BeFalse();
-            fields.TryGetValue("error_description", out temp).Should().BeFalse();
-            fields.TryGetValue("token_type", out temp).Should().BeTrue();
-            fields.TryGetValue("expires_in", out temp).Should().BeTrue();
+            JsonElement jsonElement;
+            response.Json.TryGetProperty("identity_token", out jsonElement).Should().BeFalse();
+            response.Json.TryGetProperty("refresh_token", out jsonElement).Should().BeFalse();
+            response.Json.TryGetProperty("error", out jsonElement).Should().BeFalse();
+            response.Json.TryGetProperty("error_description", out jsonElement).Should().BeFalse();
+            response.Json.TryGetProperty("token_type", out jsonElement).Should().BeTrue();
+            response.Json.TryGetProperty("expires_in", out jsonElement).Should().BeTrue();
 
-            var responseObject = fields["dto"] as JObject;
+            var responseObject = response.Json.GetProperty("dto");
             responseObject.Should().NotBeNull();
 
-            var responseDto = GetDto(responseObject);
+            var responseDto = responseObject.Deserialize<CustomResponseDto>();
             var dto = CustomResponseDto.Create;
 
             responseDto.string_value.Should().Be(dto.string_value);
@@ -115,22 +115,21 @@ namespace IdentityServer.IntegrationTests.Clients
             });
 
             // raw fields
-            var fields = GetFields(response);
-            fields.Should().Contain("string_value", "some_string");
-            ((Int64)fields["int_value"]).Should().Be(42);
+            response.Json.GetProperty("string_value").GetString().Should().Be("some_string");
+            response.Json.GetProperty("int_value").GetInt64().Should().Be(42);
 
-            object temp;
-            fields.TryGetValue("identity_token", out temp).Should().BeFalse();
-            fields.TryGetValue("refresh_token", out temp).Should().BeFalse();
-            fields.TryGetValue("error", out temp).Should().BeTrue();
-            fields.TryGetValue("error_description", out temp).Should().BeTrue();
-            fields.TryGetValue("token_type", out temp).Should().BeFalse();
-            fields.TryGetValue("expires_in", out temp).Should().BeFalse();
+            JsonElement jsonElement;
+            response.Json.TryGetProperty("identity_token", out jsonElement).Should().BeFalse();
+            response.Json.TryGetProperty("refresh_token", out jsonElement).Should().BeFalse();
+            response.Json.TryGetProperty("error", out jsonElement).Should().BeTrue();
+            response.Json.TryGetProperty("error_description", out jsonElement).Should().BeTrue();
+            response.Json.TryGetProperty("token_type", out jsonElement).Should().BeFalse();
+            response.Json.TryGetProperty("expires_in", out jsonElement).Should().BeFalse();
 
-            var responseObject = fields["dto"] as JObject;
+            var responseObject = response.Json.GetProperty("dto");
             responseObject.Should().NotBeNull();
 
-            var responseDto = GetDto(responseObject);
+            var responseDto = responseObject.Deserialize<CustomResponseDto>();
             var dto = CustomResponseDto.Create;
 
             responseDto.string_value.Should().Be(dto.string_value);
@@ -169,22 +168,21 @@ namespace IdentityServer.IntegrationTests.Clients
 
 
             // raw fields
-            var fields = GetFields(response);
-            fields.Should().Contain("string_value", "some_string");
-            ((Int64)fields["int_value"]).Should().Be(42);
+            response.Json.GetProperty("string_value").GetString().Should().Be("some_string");
+            response.Json.GetProperty("int_value").GetInt64().Should().Be(42);
 
-            object temp;
-            fields.TryGetValue("identity_token", out temp).Should().BeFalse();
-            fields.TryGetValue("refresh_token", out temp).Should().BeFalse();
-            fields.TryGetValue("error", out temp).Should().BeFalse();
-            fields.TryGetValue("error_description", out temp).Should().BeFalse();
-            fields.TryGetValue("token_type", out temp).Should().BeTrue();
-            fields.TryGetValue("expires_in", out temp).Should().BeTrue();
+            JsonElement jsonElement;
+            response.Json.TryGetProperty("identity_token", out jsonElement).Should().BeFalse();
+            response.Json.TryGetProperty("refresh_token", out jsonElement).Should().BeFalse();
+            response.Json.TryGetProperty("error", out jsonElement).Should().BeFalse();
+            response.Json.TryGetProperty("error_description", out jsonElement).Should().BeFalse();
+            response.Json.TryGetProperty("token_type", out jsonElement).Should().BeTrue();
+            response.Json.TryGetProperty("expires_in", out jsonElement).Should().BeTrue();
 
-            var responseObject = fields["dto"] as JObject;
-            responseObject.Should().NotBeNull();
+            var responseObject = response.Json.GetProperty("dto");
+            responseObject.ValueKind.Should().NotBe(JsonValueKind.Null).And.NotBe(JsonValueKind.Undefined);
 
-            var responseDto = GetDto(responseObject);
+            var responseDto = responseObject.Deserialize<CustomResponseDto>();
             var dto = CustomResponseDto.Create;
 
             responseDto.string_value.Should().Be(dto.string_value);
@@ -240,22 +238,21 @@ namespace IdentityServer.IntegrationTests.Clients
 
 
             // raw fields
-            var fields = GetFields(response);
-            fields.Should().Contain("string_value", "some_string");
-            ((Int64)fields["int_value"]).Should().Be(42);
+            response.Json.GetProperty("string_value").GetString().Should().Be("some_string");
+            response.Json.GetProperty("int_value").GetInt64().Should().Be(42);
 
-            object temp;
-            fields.TryGetValue("identity_token", out temp).Should().BeFalse();
-            fields.TryGetValue("refresh_token", out temp).Should().BeFalse();
-            fields.TryGetValue("error", out temp).Should().BeTrue();
-            fields.TryGetValue("error_description", out temp).Should().BeTrue();
-            fields.TryGetValue("token_type", out temp).Should().BeFalse();
-            fields.TryGetValue("expires_in", out temp).Should().BeFalse();
+            JsonElement jsonElement;
+            response.Json.TryGetProperty("identity_token", out jsonElement).Should().BeFalse();
+            response.Json.TryGetProperty("refresh_token", out jsonElement).Should().BeFalse();
+            response.Json.TryGetProperty("error", out jsonElement).Should().BeTrue();
+            response.Json.TryGetProperty("error_description", out jsonElement).Should().BeTrue();
+            response.Json.TryGetProperty("token_type", out jsonElement).Should().BeFalse();
+            response.Json.TryGetProperty("expires_in", out jsonElement).Should().BeFalse();
 
-            var responseObject = fields["dto"] as JObject;
+            var responseObject = response.Json.GetProperty("dto");
             responseObject.Should().NotBeNull();
 
-            var responseDto = GetDto(responseObject);
+            var responseDto = responseObject.Deserialize<CustomResponseDto>();
             var dto = CustomResponseDto.Create;
 
             responseDto.string_value.Should().Be(dto.string_value);
@@ -272,16 +269,6 @@ namespace IdentityServer.IntegrationTests.Clients
             response.TokenType.Should().BeNull();
             response.IdentityToken.Should().BeNull();
             response.RefreshToken.Should().BeNull();
-        }
-
-        private CustomResponseDto GetDto(JObject responseObject)
-        {
-            return responseObject.ToObject<CustomResponseDto>();
-        }
-
-        private Dictionary<string, object> GetFields(TokenResponse response)
-        {
-            return response.Json.ToObject<Dictionary<string, object>>();
         }
 
         private Dictionary<string, object> GetPayload(TokenResponse response)

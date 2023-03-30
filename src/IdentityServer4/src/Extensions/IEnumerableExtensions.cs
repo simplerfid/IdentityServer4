@@ -13,7 +13,7 @@ namespace IdentityServer4.Extensions
 {
     public static class IEnumerableExtensions
     {
-        [DebuggerStepThrough]
+        /*[DebuggerStepThrough]
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> list)
         {
             if (list == null)
@@ -27,7 +27,7 @@ namespace IdentityServer4.Extensions
             }
 
             return false;
-        }
+        }*/
 
         public static bool HasDuplicates<T, TProp>(this IEnumerable<T> list, Func<T, TProp> selector)
         {

@@ -79,7 +79,7 @@ namespace IdentityServer4.Models
         /// <value>
         /// The type.
         /// </value>
-        public string Type { get; set; } = OidcConstants.TokenTypes.AccessToken;
+        public string Type { get; set; } = "access_token";// OidcConstants.TokenTypes.AccessToken;
 
         /// <summary>
         /// Gets or sets the ID of the client.
@@ -135,7 +135,7 @@ namespace IdentityServer4.Models
         /// <value>
         /// The session identifier.
         /// </value>
-        public string SessionId => Claims.Where(x => x.Type == JwtClaimTypes.SessionId).Select(x => x.Value).SingleOrDefault();
+        public string SessionId => Claims.Where(x => x.Type == /*JwtClaimTypes.SessionId*/"sid").Select(x => x.Value).SingleOrDefault();
 
         /// <summary>
         /// Gets the scopes.
