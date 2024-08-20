@@ -59,7 +59,7 @@ namespace IdentityServer4.Validation
             {
                 await RaiseFailureEventAsync("unknown", "No client id found");
 
-                _logger.LogError("No client identifier found");
+                _logger.LogWarning("No client identifier found");
                 return fail;
             }
 
@@ -69,7 +69,7 @@ namespace IdentityServer4.Validation
             {
                 await RaiseFailureEventAsync(parsedSecret.Id, "Unknown client");
 
-                _logger.LogError("No client with id '{clientId}' found. aborting", parsedSecret.Id);
+                _logger.LogWarning("No client with id '{clientId}' found. aborting", parsedSecret.Id);
                 return fail;
             }
 
@@ -84,7 +84,7 @@ namespace IdentityServer4.Validation
                 if (secretValidationResult.Success == false)
                 {
                     await RaiseFailureEventAsync(client.ClientId, "Invalid client secret");
-                    _logger.LogError("Client secret validation failed for client: {clientId}.", client.ClientId);
+                    _logger.LogWarning("Client secret validation failed for client: {clientId}.", client.ClientId);
 
                     return fail;
                 }
