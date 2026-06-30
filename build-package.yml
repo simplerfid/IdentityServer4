@@ -9,6 +9,12 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+# Full history + tags so MinVer derives the real package version from the git tag
+# (default shallow CI checkout has no tags -> MinVer falls back to 0.0.0-alpha.0).
+- checkout: self
+  fetchDepth: 0
+  fetchTags: true
+
 - task: Bash@3
   displayName: 'Build & pack (build.sh)'
   inputs:
@@ -20,4 +26,4 @@ steps:
     command: 'push'
     packagesToPush: './nuget/*.nupkg'
     nuGetFeedType: 'internal'
-    publishVstsFeed: 'ab692db8-8cb7-40df-bce4-34705ed4b329'
+    publishVstsFeed: '41738329-5fc2-7c9b-a6a5-dc0ac79d118c'
